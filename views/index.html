@@ -1,4 +1,81 @@
-<div class="container">
-    <h3>Vue "Index"</h3>
-</div>
+<div <div class="container">
+    <h3>Liste de Courses</h3>
+    <div class="row">
+        <div>
+            <a class="waves-effect waves-light red btn" onclick="indexController.displayAddList()"><i class="material-icons center" >add</i></a>
+        </div>
 
+
+        <div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Listes</th>
+                    <th>Date</th>
+                    <th>Archivée</th>
+                </tr>
+                </thead>
+                <tbody id="ListTable">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="modalAddList" class="modal">
+        <div class="modal-content">
+            <h4>Ajouter une liste</h4>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input placeholder="Nom de la liste" id="liste" type="text" class="validate">
+                </div>
+                <div class="input-field col s3">
+                    <input placeholder="Selectioner la date" id="date" type="date" class="validate">
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" id="archiinsert">
+                        <span>Archiver</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-light purple btn" id="btnaddlist" onclick="indexController.AddList()">Ajouter</a>
+            </div>
+        </div>
+    </div>
+    <div id="modalEditList" class="modal">
+        <div class="modal-content">
+            <h4>Modifier la liste</h4>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="listeEdit" type="text" class="validate">
+                </div>
+                <div class="input-field col s3">
+                    <input id="dateEdit" type="date" class="validate">
+                </div >
+                <div>
+                    <label>
+                        <input type="checkbox" id="archi">
+                        <span>Archiver</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="editfonc"></div>
+
+            </div>
+        </div>
+    </div>
+    <div id="modalConfirmDelete" class="modal">
+        <div class="modal-content">
+            <h4>Supprimer</h4>
+            <p>Etes vous sûr de vouloir supprimer <span id="spanDeleteObject"></span> ?</p>
+        </div>
+        <div class="modal-footer">
+            <div id="suppfonc"></div>
+
+
+        </div>
+    </div>
+</div>

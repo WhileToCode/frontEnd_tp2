@@ -1,0 +1,78 @@
+<div>
+    <h3 id="title"></h3>
+    <div class="row">
+        <div>
+            <a class="waves-effect waves-light purple btn" onclick="indexController.displayAddItem()"><i class="material-icons center" >add</i></a>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Nom des Articles</th>
+                <th>Quantité</th>
+                <th>Acheté</th>
+            </tr>
+            </thead>
+            <tbody id="ArticleTable">
+
+            </tbody>
+        </table>
+    </div>
+    <div id="modalAddItem" class="modal">
+        <div class="modal-content">
+            <h4>Ajouter un article</h4>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input placeholder="Nom de l'article" id="article" type="text" class="validate">
+                </div>
+                <div class="input-field col s3">
+                    <input placeholder="quantité d'articles" id="nombre" type="number" class="validate">
+                </div>
+                <div>
+                    <label>
+                        <input type="checkbox" id="checkinsert">
+                        <span>Archiver</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="modal-close waves-effect waves-light purple btn" id="btnadditem" onclick="indexController.AddItem()">Ajouter</a>
+            </div>
+        </div>
+    </div>
+    <div id="modalEditarticle" class="modal">
+        <div class="modal-content">
+            <h4>Modifier l'Article'</h4>
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="nomedit" type="text" class="validate">
+                </div>
+                <div class="input-field col s3">
+                    <input id="nombreedit" type="number" class="validate">
+                </div >
+                <div>
+                    <label>
+                        <input type="checkbox" id="check">
+                        <span>Archiver</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div id="editfonc2"></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modalConfirmDeleteItem" class="modal">
+    <div class="modal-content">
+        <h4>Supprimer</h4>
+        <p>Etes vous sûr de vouloir supprimer <span id="spanDeleteObject2"></span> ?</p>
+    </div>
+    <div class="modal-footer">
+        <div id="suppfonc2"></div>
+
+    </div>
+</div>
+</div>
+</div>
