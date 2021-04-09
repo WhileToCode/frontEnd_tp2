@@ -15,28 +15,28 @@ class IndexController extends BaseController {
 
     async AddArticle(){
         let article = $('#article').value
-        let quantity = $('#nombre').value
+        let quantite = $('#nombre').value
         let checked = $('#checkinsert').checked
         let list_id = this.list_id
-        let newarticle = new Articles(article, quantity, checked, list_id)
-        await this.model.insert(newarticle)
+        let newarticle = new Articles(article, quantite, checked, list_id)
+        await this.modelarticle.insert(newarticle)
         console.log(`${newarticle}`)
         this.displayAllFromList()
     }
 
     async displayEditArticle(article_id){
         const article = await this.modelarticle.getArticle(article_id)
-        $("#nomedit").value = article.article
-        $("#nombreedit").value = article.quantity
-        let content = `<a href="#" class="modal-close waves-effect waves-light purple btn" id="btnConfirmEditList" onclick="indexController.EditItem(${article.article_id})" >Modifier</a>`
+        $("#nomedit").value = article.articles
+        $("#nombreedit").value = article.quantite
+        let content = `<button class="modal-close waves-effect waves-light red btn" id="btnConfirmEditList" onclick="indexController.EditArticle(${article.id})" >Modifier</button>`
         $('#editfonc2').innerHTML = content
         this.getModal('#modalEditArticle').open()
     }
 
     async EditArticle(article_id){
         try {
-
-            const article = await this.liste.getItem(article_id)
+console.log(article_id)
+            const article = await this.modelarticle.getArticle(article_id)
             if (article === undefined) {
                 this.displayServiceError()
                 return
@@ -45,11 +45,11 @@ class IndexController extends BaseController {
                 this.displayNotFoundError()
                 return
             }
-            article.article = $("#nomedit").value
-            article.quantity = $("#nombreedit").value
+            article.articles = $("#nomedit").value
+            article.quantite = $("#nombreedit").value
             article.checked = $("#check").checked
 
-            await this.ModelArticle.update(article)
+            await this.modelarticle.update(article)
             this.displayAllFromList()
 
         } catch (err) {
@@ -71,21 +71,21 @@ class IndexController extends BaseController {
             return
         }
 
-        $('#spanDeleteObject2').innerText = article.article.toString()
+        $('#spanDeleteObject2').innerText = article.articles.toString()
         let content =`<a href="#" class="modal-close waves-effect waves-green btn-flat" id="btnDelete" onclick="indexController.DeleteArticle(${article.article_id})">Oui</a>`
         $('#suppfonc2').innerHTML = content
-        this.getModal('#modalConfirmDeleteItem').open()
+        this.getModal('#modalConfirmDeleteArticle').open()
 
     }
 
     async DeleteArticle(article_id){
         try{
 
-            const article = await this.model.getItem(article_id)
-            switch(await this.modelArticle.delete(article_id)) {
+            const article = await this.modelarticle.getArticle(article_id)
+            switch(await this.modelarticle.delete(article_id)) {
                 case 200:
-                    this.deletedItem = article
-                    await this.displayDeletedMessage("indexController.undoDeleteItem()");
+                    this.deletedArticle = article
+                    await this.displayDeletedMessage("indexController.undoDeleteArticle()");
                     break
                 case 404:
                     this.displayNotFoundError();
@@ -103,10 +103,10 @@ class IndexController extends BaseController {
     }
 
     async undoDeleteArticle(){
-        if (this.deletedItem) {
-            await this.model.insert(this.deletedItem).then(status => {
+        if (this.deletedArticle) {
+            await this.modelarticle.insert(this.deletedArticle).then(status => {
                 if (status == 200) {
-                    this.deletedItem = null
+                    this.deletedArticle = null
                     this.displayUndoDone()
                     this.displayAllFromList()
                 }
@@ -117,24 +117,23 @@ class IndexController extends BaseController {
     async displayAllFromList(){
         try {
             let content = ''
-            const items = await this.modelitem.getAllFromList(this.list_id)
-
-            for (let item of items){
+            const articles = await this.modelarticle.getAllFromList(this.list_id)
+            for (let article of articles){
                 let check = ""
-                if (item.checked){
-                    check = `<input type="checkbox" class="filled-in" checked="checked" background="purple"/> <span>Acheté</span>`
+                if (article.checked){
+                    check = `<input type="checkbox" class="filled-in" checked="checked" background="red"/> <span>Acheté</span>`
                 }
                 else {
-                    check = `<input type="checkbox" class="filled-in" background="purple"/><span>Non Acheté</span>`
+                    check = `<input type="checkbox" class="filled-in" background="red"/><span>Non Acheté</span>`
                 }
-                content += `<tr><td >${item.label}</td>
-                    <td>${item.quantity}</td>
+                content += `<tr><td >${article.articles}</td>
+                    <td>${article.quantite}</td>
                     <td>${check}</td>
-                    <td><a class="btn-floating btn-small waves-effect waves-light purple " ><i class="material-icons center" onclick="indexController.displayConfirmDeleteAticle(${item.item_id})">delete_forever</i></a></td>
-                    <td><a class="btn-floating btn-small waves-effect waves-light purple" ><i class="material-icons center" onclick="indexController.displayEditArticle(${item.item_id})" >edit</i></a></td>
+                    <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.displayConfirmDeleteArticle(${article.id})">delete_forever</i></a></td>
+                    <td><a class="btn-floating btn-small waves-effect waves-light red" ><i class="material-icons center" onclick="indexController.displayEditArticle(${article.id})" >edit</i></a></td>
                     </tr>`
             }
-            $("#ItemTable").innerHTML = content
+            $("#ArticleTable").innerHTML = content
         } catch (err) {
             console.log(err)
             this.displayServiceError()

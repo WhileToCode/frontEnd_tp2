@@ -12,7 +12,7 @@ class ModelArticle {
 
     async getArticle(article_id){
         try {
-            let article = Object.assign(new Liste(), await this.api.get(article_id))
+            let article = Object.assign(new Liste(), await this.api.getArticle(article_id))
 
             return article
         } catch (e) {

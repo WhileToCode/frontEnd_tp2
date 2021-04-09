@@ -12,7 +12,7 @@ class IndexController extends BaseController {
         const list = await this.model.getListe(list_id)
         $("#listeEdit").value = list.namelistes
         $("#dateEdit").value = list.date.toISOString().substr(0, 10)
-        let content = `<a href="#" class="modal-close waves-effect waves-light purple btn" id="btnConfirmEditList" onclick="indexController.EditList(${list.id})" >Modifier</a>`
+        let content = `<button class="modal-close waves-effect waves-light red btn" id="btnConfirmEditList" onclick="indexController.EditList(${list.id})" >Modifier</button>`
         $('#editfonc').innerHTML = content
         this.getModal('#modalEditList').open()
 
@@ -66,7 +66,7 @@ class IndexController extends BaseController {
             return
         }
         $('#spanDeleteObject').innerText = list.namelistes.toString()
-        let content =`<a href="#" class="modal-close waves-effect waves-green btn-flat" id="btnDelete" onclick="indexController.DeleteList(${list.id})">Oui</a>`
+        let content =`<button class="modal-close waves-effect waves-green btn-flat" id="btnDelete" onclick="indexController.DeleteList(${list.id})">Oui</button>`
         $('#suppfonc').innerHTML = content
         this.getModal('#modalConfirmDelete').open()
     }
@@ -108,7 +108,7 @@ class IndexController extends BaseController {
 
     displayList(list_id){
         this.SelectedList_id = list_id
-        navigate('Item')
+        navigate('articles')
 
 
     }
@@ -120,10 +120,10 @@ class IndexController extends BaseController {
             for (let list of listes) {
                 let check = ""
                 if (list.archived){
-                    check = `<input type="checkbox" class="filled-in purple" checked="checked"/> <span>Archivé</span>`
+                    check = `<input type="checkbox" class="filled-in red" checked="checked"/> <span>Archivé</span>`
                 }
                 else {
-                    check = `<input type="checkbox" class="filled-in purple"/><span>Non Archivé</span>`
+                    check = `<input type="checkbox" class="filled-in red"/><span>Non Archivé</span>`
                 }
                 const date = list.date.toLocaleDateString()
                 content += `<tr><td onclick="indexController.displayList(${list.id})">${list.namelistes}</td>

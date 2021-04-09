@@ -2,7 +2,7 @@
     <h3 id="title"></h3>
     <div class="row">
         <div>
-            <a class="waves-effect waves-light purple btn" onclick="indexController.displayAddItem()"><i class="material-icons center" >add</i></a>
+            <a class="waves-effect waves-light red btn" onclick="indexController.displayAddArticle()"><i class="material-icons center" >add</i></a>
         </div>
 
         <table>
@@ -18,7 +18,7 @@
             </tbody>
         </table>
     </div>
-    <div id="modalAddItem" class="modal">
+    <div id="modalAddArticle" class="modal">
         <div class="modal-content">
             <h4>Ajouter un article</h4>
             <div class="row">
@@ -36,11 +36,11 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" class="modal-close waves-effect waves-light purple btn" id="btnadditem" onclick="indexController.AddItem()">Ajouter</a>
+                <a href="#" class="modal-close waves-effect waves-light purple btn" id="btnaddarticle" onclick="indexController.AddArticle()">Ajouter</a>
             </div>
         </div>
     </div>
-    <div id="modalEditarticle" class="modal">
+    <div id="modalEditArticle" class="modal">
         <div class="modal-content">
             <h4>Modifier l'Article'</h4>
             <div class="row">
@@ -64,7 +64,7 @@
         </div>
     </div>
 </div>
-<div id="modalConfirmDeleteItem" class="modal">
+<div id="modalConfirmDeleteArticle" class="modal">
     <div class="modal-content">
         <h4>Supprimer</h4>
         <p>Etes vous sûr de vouloir supprimer <span id="spanDeleteObject2"></span> ?</p>

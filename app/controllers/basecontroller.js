@@ -3,11 +3,13 @@ class BaseController {
         M.AutoInit();
         this.setBackButtonView('index')
 
+        this.modelarticle = new ModelArticle()
+      //  this.articles = new Articles()
         this.liste = new Liste()
         this.model = new Model()
     }
     checkAuthentication() {
-        if (sessionStorage.getItem("token") === null) {
+        if (sessionStorage.getArticle("token") === null) {
             window.location.replace("login.html")
         }
     }

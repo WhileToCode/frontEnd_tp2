@@ -1,20 +1,24 @@
-const serviceBaseUrl = "http://localhost:3333/articles"
+const serviceBaseUrl2 = "http://localhost:3333/articles"
 
 class ArticleAPI {
     getAll() {
-        return fetchJSON(serviceBaseUrl)
+        return fetchJSON(serviceBaseUrl2)
     }
 
-    get(id) {
-        return fetchJSON(`${serviceBaseUrl}/${id}`)
+    getAllFromList(list_id){
+        return fetchJSON(`${serviceBaseUrl2}/listes/${list_id}`)
+    }
+
+    getArticle(id) {
+        return fetchJSON(`${serviceBaseUrl2}/${id}`)
     }
 
     delete(id) {
-        return fetch(`${serviceBaseUrl}/${id}`, { method: 'DELETE' })
+        return fetch(`${serviceBaseUrl2}/${id}`, { method: 'DELETE' })
     }
 
     insert(article) {
-        return fetch(serviceBaseUrl, {
+        return fetch(serviceBaseUrl2, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(article)
@@ -22,10 +26,10 @@ class ArticleAPI {
     }
 
     update(article) {
-        return fetch(serviceBaseUrl, {
+        return fetch(serviceBaseUrl2, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(articles)
+            body: JSON.stringify(article)
         })
     }
 }
