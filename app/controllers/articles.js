@@ -7,36 +7,37 @@ class IndexController extends BaseController {
         this.displayTitle()
         this.displayAllFromList()
     }
+
     async displayTitle(){
         const list_actuel = await this.model.getListe(this.list_id)
-        $("#title").innerHTML ="Liste pour "+list_actuel.nameliste+" du "+list_actuel.date.toISOString().substr(0, 10)
+        $("#title").innerHTML ="Liste pour "+list_actuel.namelistes+" du "+list_actuel.date.toISOString().substr(0, 10)
     }
+
     displayAddArticle(){this.getModal('#modalAddArticle').open()}
 
     async AddArticle(){
         let article = $('#article').value
         let quantite = $('#nombre').value
         let checked = $('#checkinsert').checked
-        let list_id = this.list_id
-        let newarticle = new Articles(article, quantite, checked, list_id)
+        let listid = this.list_id
+        let newarticle = new Articles(article, quantite, checked, listid)
         await this.modelarticle.insert(newarticle)
-        console.log(`${newarticle}`)
         this.displayAllFromList()
     }
 
-    async displayEditArticle(article_id){
-        const article = await this.modelarticle.getArticle(article_id)
+    async displayEditArticle(id){
+        const article = await this.modelarticle.getArticle(id)
         $("#nomedit").value = article.articles
         $("#nombreedit").value = article.quantite
         let content = `<button class="modal-close waves-effect waves-light red btn" id="btnConfirmEditList" onclick="indexController.EditArticle(${article.id})" >Modifier</button>`
         $('#editfonc2').innerHTML = content
         this.getModal('#modalEditArticle').open()
+        this.displayAllFromList()
     }
 
-    async EditArticle(article_id){
+    async EditArticle(id){
         try {
-console.log(article_id)
-            const article = await this.modelarticle.getArticle(article_id)
+            const article = await this.modelarticle.getArticle(id)
             if (article === undefined) {
                 this.displayServiceError()
                 return
@@ -58,9 +59,9 @@ console.log(article_id)
         }
     }
 
-    async displayConfirmDeleteArticle(article_id){
+    async displayConfirmDeleteArticle(id){
 
-        const article = await this.modelarticle.getArticle(article_id)
+        const article = await this.modelarticle.getArticle(id)
 
         if (article === undefined) {
             this.displayServiceError()
@@ -72,17 +73,17 @@ console.log(article_id)
         }
 
         $('#spanDeleteObject2').innerText = article.articles.toString()
-        let content =`<a href="#" class="modal-close waves-effect waves-green btn-flat" id="btnDelete" onclick="indexController.DeleteArticle(${article.article_id})">Oui</a>`
+        let content =`<button class="modal-close waves-effect waves-green btn-flat" id="btnDelete" onclick="indexController.DeleteArticle(${article.id})">Oui</button>`
         $('#suppfonc2').innerHTML = content
         this.getModal('#modalConfirmDeleteArticle').open()
 
     }
 
-    async DeleteArticle(article_id){
+    async DeleteArticle(id){
         try{
 
-            const article = await this.modelarticle.getArticle(article_id)
-            switch(await this.modelarticle.delete(article_id)) {
+            const article = await this.modelarticle.getArticle(id)
+            switch(await this.modelarticle.delete(id)) {
                 case 200:
                     this.deletedArticle = article
                     await this.displayDeletedMessage("indexController.undoDeleteArticle()");
@@ -111,6 +112,8 @@ console.log(article_id)
                     this.displayAllFromList()
                 }
             }).catch(_ => this.displayServiceError())
+            this.displayAllFromList()
+
         }}
 
 

@@ -1,10 +1,13 @@
-<div <div class="container">
-    <h3>Liste de Courses</h3>
-    <div class="row">
-        <div>
-            <a class="waves-effect waves-light red btn" onclick="indexController.displayAddList()"><i class="material-icons center" >add</i></a>
-        </div>
-
+ <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo">Listes de courses </a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a  id="btnadd" onclick="indexController.displayAddList()">Nouvelle Liste</a></li></li>
+                    <li><a class="modal-trigger" id="historique" onclick="indexController.displayAllListsArchived()">historique</a></li>
+                    <li><a class="modal-trigger" id="btncour" onclick="indexController.displayAllLists()">Liste en cour</a></li>
+                </ul>
+            </div>
+ </nav>
 
         <div>
 

@@ -5,8 +5,8 @@ class ArticleAPI {
         return fetchJSON(serviceBaseUrl2)
     }
 
-    getAllFromList(list_id){
-        return fetchJSON(`${serviceBaseUrl2}/listes/${list_id}`)
+    getAllFromList(id){
+        return fetchJSON(`${serviceBaseUrl2}/listes/${id}`)
     }
 
     getArticle(id) {
@@ -18,6 +18,7 @@ class ArticleAPI {
     }
 
     insert(article) {
+        console.log(article)
         return fetch(serviceBaseUrl2, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

@@ -1,9 +1,9 @@
 class Articles {
-    constructor(articles, quantite, checked) {
+    constructor(articles, quantite, checked, list_id) {
         this.articles = articles
         this.quantite = quantite
         this.checked = checked
-        this.id = null
+        this.list_id = list_id
     }
 
     toString() {

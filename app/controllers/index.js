@@ -1,27 +1,33 @@
 class IndexController extends BaseController {
+    newline = document.getElementById("btnadd");
+    ListEncour = document.getElementById("btncour");
+    historique = document.getElementById("historique");
+
+
     constructor() {
         super()
         this.displayAllLists()
+        this.ListEncour.style.display = "none";
     }
 
     displayAddList(){
         this.getModal('#modalAddList').open()
     }
 
-    async displayEditList(list_id){
-        const list = await this.model.getListe(list_id)
+    async displayEditList(id){
+        const list = await this.model.getListe(id)
         $("#listeEdit").value = list.namelistes
         $("#dateEdit").value = list.date.toISOString().substr(0, 10)
         let content = `<button class="modal-close waves-effect waves-light red btn" id="btnConfirmEditList" onclick="indexController.EditList(${list.id})" >Modifier</button>`
         $('#editfonc').innerHTML = content
         this.getModal('#modalEditList').open()
-
+        this.displayAllLists()
     }
 
-    async EditList(list_id){
+    async EditList(id){
         try {
 
-            const list = await this.model.getListe(list_id)
+            const list = await this.model.getListe(id)
             if (list === undefined) {
                 this.displayServiceError()
                 return
@@ -54,8 +60,8 @@ class IndexController extends BaseController {
         await this.displayAllLists()
     }
 
-    async displayConfirmDelete(list_id){
-        const list = await this.model.getListe(list_id)
+    async displayConfirmDelete(id){
+        const list = await this.model.getListe(id)
 
         if (list === undefined) {
             this.displayServiceError()
@@ -69,7 +75,9 @@ class IndexController extends BaseController {
         let content =`<button class="modal-close waves-effect waves-green btn-flat" id="btnDelete" onclick="indexController.DeleteList(${list.id})">Oui</button>`
         $('#suppfonc').innerHTML = content
         this.getModal('#modalConfirmDelete').open()
+        this.displayAllLists()
     }
+
     async undoDelete(){
         if (this.deletedList) {
             this.model.insert(this.deletedList).then(status => {
@@ -79,13 +87,14 @@ class IndexController extends BaseController {
                     this.displayAllLists()
                 }
             }).catch(_ => this.displayServiceError())
+            this.displayAllLists()
         }}
 
-    async DeleteList(list_id){
+    async DeleteList(id){
         try{
 
-            const list = await this.model.getListe(list_id)
-            switch(await this.model.delete(list_id)) {
+            const list = await this.model.getListe(id)
+            switch(await this.model.delete(id)) {
                 case 200:
                     this.deletedList = list
                     await this.displayDeletedMessage("indexController.undoDelete()");
@@ -106,14 +115,18 @@ class IndexController extends BaseController {
 
     }
 
-    displayList(list_id){
-        this.SelectedList_id = list_id
+    displayList(id){
+        this.SelectedList_id = id
         navigate('articles')
 
 
     }
 
     async displayAllLists(){
+        this.newline.style.display = "block";
+        this.historique.style.display = "block";
+        this.ListEncour.style.display = "none";
+
         let content = ''
         const listes = await this.model.getAllListes()
         try {
@@ -126,15 +139,51 @@ class IndexController extends BaseController {
                     check = `<input type="checkbox" class="filled-in red"/><span>Non Archivé</span>`
                 }
                 const date = list.date.toLocaleDateString()
-                content += `<tr><td onclick="indexController.displayList(${list.id})">${list.namelistes}</td>
+                if (!list.archived) {
+                    content += `<tr><td onclick="indexController.displayList(${list.id})">${list.namelistes}</td>
                     <td>${date}</td>
-                    <td>${list.archived}</td>
                     <td>${check}</td>
 
                       <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.displayConfirmDelete(${list.id})">delete_forever</i></a></td>
                     <td><a class="btn-floating btn-small waves-effect waves-light red" ><i class="material-icons center" onclick="indexController.displayEditList(${list.id})">edit</i></a></td>
 
                     </tr>`
+                }
+            }
+            $("#ListTable").innerHTML = content
+        } catch (err) {
+            console.log(err)
+            this.displayServiceError()
+        }
+    }
+    async displayAllListsArchived(){
+        this.ListEncour.style.display = "block";
+        this.newline.style.display = "none";
+        this.historique.style.display = "none";
+
+
+        let content = ''
+        const listes = await this.model.getAllListes()
+        try {
+            for (let list of listes) {
+                let check = ""
+                if (list.archived){
+                    check = `<input type="checkbox" class="filled-in red" checked="checked"/> <span>Archivé</span>`
+                }
+                else {
+                    check = `<input type="checkbox" class="filled-in red"/><span>Non Archivé</span>`
+                }
+                const date = list.date.toLocaleDateString()
+                if (list.archived) {
+                    content += `<tr><td onclick="indexController.displayList(${list.id})">${list.namelistes}</td>
+                    <td>${date}</td>
+                    <td>${check}</td>
+
+                      <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.displayConfirmDelete(${list.id})">delete_forever</i></a></td>
+                    <td><a class="btn-floating btn-small waves-effect waves-light red" ><i class="material-icons center" onclick="indexController.displayEditList(${list.id})">edit</i></a></td>
+
+                    </tr>`
+                }
             }
             $("#ListTable").innerHTML = content
         } catch (err) {

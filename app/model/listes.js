@@ -3,7 +3,7 @@ class Liste {
         this.namelistes = namelistes
         this.date = date
         this.archived = archived
-        this.id = null
+      //  this.id = null
     }
 
     toString() {
