@@ -1,10 +1,12 @@
-<div>
-    <h3 id="title"></h3>
-    <div class="row">
-        <div>
-            <a class="waves-effect waves-light red btn" onclick="indexController.displayAddArticle()"><i class="material-icons center" >add</i></a>
-        </div>
-
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" id="title" class="brand-logo">Listes de courses</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a  id="btnadd" onclick="indexController.displayAddArticle()">Nouvel Article</a></li></li>
+            <li><a  id="btnback" onclick="navigate('index')">Retour</a></li>
+        </ul>
+    </div>
+</nav>
         <table>
             <thead>
             <tr>

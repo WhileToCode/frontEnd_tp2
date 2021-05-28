@@ -18,11 +18,17 @@ class IndexController extends BaseController {
     async AddArticle(){
         let article = $('#article').value
         let quantite = $('#nombre').value
-        let checked = $('#checkinsert').checked
-        let listid = this.list_id
-        let newarticle = new Articles(article, quantite, checked, listid)
-        await this.modelarticle.insert(newarticle)
-        this.displayAllFromList()
+        if (article !== "" && article !== null && quantite !== "" && quantite !== null){
+            let checked = $('#checkinsert').checked
+            let listid = this.list_id
+            let newarticle = new Articles(article, quantite, checked, listid)
+            await this.modelarticle.insert(newarticle)
+            this.displayAllFromList()
+        }else{
+            indexController.validateRequiredField("#article", "name")
+            indexController.validateRequiredField("#nombre", "quantite")
+
+        }
     }
 
     async displayEditArticle(id){

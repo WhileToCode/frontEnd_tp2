@@ -29,11 +29,20 @@ class BaseController {
         this.toast('Opération annulée')
     }
     displayDeletedMessage(onUndo) {
-        this.toast( `<span>Supression effectuée</span><button class="btn-flat toast-action" onclick="${onUndo}">Annuler</button>`)
+        this.toast( `<span>Supression effectuée</span> <button class="btn-flat toast-action" onclick="${onUndo}">Annuler</button>`)
     }
     setBackButtonView(view) {
         window.onpopstate = function() {
             navigate(view)
         }; history.pushState({}, '');
+    }
+    validateRequiredField(selector, name) {
+        const value =  $(selector).value
+        if ((value == null) || (value === "")) {
+            this.toast(`Le champs '${name}' est obligatoire`)
+            $(selector).style.backgroundColor = 'antiquewhite'
+            return null
+        }
+        return value
     }
 }
