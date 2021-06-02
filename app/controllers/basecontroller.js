@@ -1,8 +1,8 @@
 class BaseController {
-    constructor() {
+    constructor(secured) {
+        if (secured) { this.checkAuthentication() }
         M.AutoInit();
         this.setBackButtonView('index')
-
         this.modelarticle = new ModelArticle()
       //  this.articles = new Articles()
         this.liste = new Liste()

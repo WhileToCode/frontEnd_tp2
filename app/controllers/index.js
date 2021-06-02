@@ -120,7 +120,7 @@ class IndexController extends BaseController {
                     let pageActu = this.deletedList.archived
                     this.deletedList = null
                     this.displayUndoDone()
-                    if (!pageActu){ this.displayList()}
+                    if (!pageActu){ this.displayAllLists()}
                     else if (pageActu){ this.displayAllListsArchived()}                }
             }).catch(_ => this.displayServiceError())
         }}

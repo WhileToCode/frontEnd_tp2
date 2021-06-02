@@ -1,6 +1,6 @@
 const serviceBaseUrl2 = "http://localhost:3333/articles"
 
-class ArticleAPI {
+class ArticleAPI{
     getAll() {
         return fetchJSON(serviceBaseUrl2)
     }

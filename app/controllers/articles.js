@@ -10,7 +10,7 @@ class IndexController extends BaseController {
 
     async displayTitle(){
         const list_actuel = await this.model.getListe(this.list_id)
-        $("#title").innerHTML ="Liste pour "+list_actuel.namelistes+" du "+list_actuel.date.toISOString().substr(0, 10)
+        $("#title").innerHTML ="Liste pour "+ list_actuel.namelistes +" du "+list_actuel.date.toISOString().substr(0, 10)
     }
 
     displayAddArticle(){this.getModal('#modalAddArticle').open()}
