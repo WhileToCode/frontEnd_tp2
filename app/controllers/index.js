@@ -3,13 +3,15 @@ class IndexController extends BaseController {
     ListEncour = document.getElementById("btncour");
     historique = document.getElementById("historique");
   //  listdeleted = document.getElementById("btndeleted");
+    listPart = document.getElementById("btnlistpart")
 
 
 
     constructor() {
         super()
         this.ListEncour.style.display = "none";
-            if (window.displayArchived){
+        this.listPart.style.display = "block"
+        if (window.displayArchived){
                  this.displayAllListsArchived()
             }
             else {
@@ -107,7 +109,7 @@ class IndexController extends BaseController {
         }
         $('#spanDeleteObject').innerText = list.namelistes.toString()
         let content =`<button class="modal-close waves-effect waves-green btn-flat" id="btnDelete" onclick="indexController.DeleteList(${list.id})">Oui</button>
-                <button class="modal-close waves-effect waves-green btn-flat" id="btnAnnulDelete" onclick="indexController.displayAllLists()">Annulé</button>`
+                <button class="modal-close waves-effect waves-green btn-flat" id="btnAnnulDelete" onclick="indexController.displayAllLists()">Annuler</button>`
         $('#suppfonc').innerHTML = content
         this.getModal('#modalConfirmDelete').open()
     }
@@ -121,7 +123,8 @@ class IndexController extends BaseController {
                     this.deletedList = null
                     this.displayUndoDone()
                     if (!pageActu){ this.displayAllLists()}
-                    else if (pageActu){ this.displayAllListsArchived()}                }
+                    else if (pageActu){ this.displayAllListsArchived()}
+                }
             }).catch(_ => this.displayServiceError())
         }}
 
@@ -172,37 +175,43 @@ class IndexController extends BaseController {
 
     }
 
-    displayList(id){
+    displayList(id, modif){
         this.SelectedList_id = id
+        this.SelectedModif = modif
         navigate('articles')
     }
+
+    /*displayListPartage(id, modif){
+        this.SelectedList_id = id
+        navigate('articles')
+    }*/
 
     async displayAllLists(){
         this.newlist.style.display = "block";
         this.historique.style.display = "block";
         this.ListEncour.style.display = "none";
-      //  this.listdeleted.style.display = "block";
+        this.listPart.style.display = "block"
+
+        //  this.listdeleted.style.display = "block";
         window.displayArchived = false
         let content = ''
         const listes = await this.model.getAllListes()
         try {
             for (let list of listes) {
                 let check = ""
-                if (list.archived){
+                if (list.archived) {
                     check = `<input type="checkbox" class="filled-in red" checked="checked"/> <span>Archivé</span>`
-                }
-                else {
+                } else {
                     check = `<input type="checkbox" class="filled-in red"/><span>Non Archivé</span>`
                 }
                 const date = list.date.toLocaleDateString()
                 if (!list.archived && !list.deleted) {
-                    content += `<tr><td onclick="indexController.displayList(${list.id})">${list.namelistes}</td>
+                    content += `<tr><td onclick="indexController.displayList(${list.id}, true)">${list.namelistes}</td>
                     <td>${date}</td>
-                    <td>${check}</td>
-
+                    <td onclick="indexController.displaychangeCheck(${list.id})">${check}</td>
                       <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.displayConfirmDelete(${list.id})">delete_forever</i></a></td>
-                    <td><a class="btn-floating btn-small waves-effect waves-light red" ><i class="material-icons center" onclick="indexController.displayEditList(${list.id})">edit</i></a></td>
-
+                      <td><a class="btn-floating btn-small waves-effect waves-light blue" ><i class="material-icons center" onclick="indexController.displayShare(${list.id})">share</i></a></td>
+                      <td><a class="btn-floating btn-small waves-effect waves-light green" ><i class="material-icons center" onclick="indexController.displayEditList(${list.id})">edit</i></a></td>
                     </tr>`
                 }
             }
@@ -213,11 +222,143 @@ class IndexController extends BaseController {
         }
     }
 
+    async displayAllPartage(){
+        this.newlist.style.display = "none";
+        this.historique.style.display = "block";
+        this.ListEncour.style.display = "block";
+        this.listPart.style.display = "none"
+        //  this.listdeleted.style.display = "block";
+        window.displayArchived = false
+        let content = ''
+        const partages = await this.modelpartage.getAllPartage()
+        const myName = await this.modeluseraccount.getByLogin(sessionStorage.getItem("displayname"))
+        try {
+                for (let partage of partages) {
+                    if(partage.loguser === myName.displayname) {
+                        const liste = await this.model.getListe(partage.liste_id)
+                        const date = liste.date.toLocaleDateString()
+                        if (!liste.deleted && partage.modifier === false) {
+                            content += `<tr><td onclick="indexController.displayList(${liste.id}, ${partage.modifier})">${liste.namelistes}</td>
+                         <td>${date}</td>
+                         <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="modelpartage.delete(${partage.id})">delete_forever</i></a></td>
+                         </tr>`
+                        }
+                        else if(!liste.deleted && partage.modifier === true) {
+                            content += `<tr><td onclick="indexController.displayList(${liste.id})">${liste.namelistes}</td>
+                         <td>${date}</td>
+                         <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="modelpartage.delete(${partage.id})">delete_forever</i></a></td>
+                         <td><a class="btn-floating btn-small waves-effect waves-light green" ><i class="material-icons center" onclick="indexController.displayEditList(${liste.id})">edit</i></a></td>
+                         </tr>`
+                        }
+                        }
+                    }
+
+            $("#ListTable").innerHTML = content
+        } catch (err) {
+            console.log(err)
+            this.displayServiceError()
+        }
+    }
+
+    async displaychangeCheck(liste_id){
+        const liste = await this.model.getListe(liste_id)
+        if(liste.archived === true){
+            liste.archived = false
+            await this.model.update(liste)
+            this.displayAllListsArchived()
+        }
+        else {
+            liste.archived = true
+            await this.model.update(liste)
+            this.displayAllLists()
+        }
+    }
+
+    async displaychangeCheckpartage(partage_id){
+        const partage = await this.modelpartage.getPartage(partage_id)
+        if(partage.modifier === true){
+            partage.modifier = false
+            await this.modelpartage.update(partage)
+        }
+        else {
+            partage.modifier = true
+            await this.modelpartage.update(partage)}
+        }
+
+    async displayShare(liste_id){
+        let content = ''
+        let content1 =''
+        let content2 = ''
+        const users = await this.modeluseraccount.getNotpartage(liste_id)
+        const partages = await this.modelpartage.getBylistid(liste_id)
+        try {
+                content1 += `<button class="waves-effect waves-light purple btn" id="btnRechercheUser" onclick="indexController.getByDisplayUser(${liste_id})">Rechercher</button>`
+            $("#rechercheUser").innerHTML = content1
+
+        } catch(err) {
+            console.log(err)
+            this.displayServiceError()
+        }
+        try {
+            for (let partage of partages){
+                content2 += `<tr><td>${partage.loguser}</td>
+                 <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="modelpartage.delete(${partage.id})">delete_forever</i></a></td>`
+                $("#ListUserpartage").innerHTML = content2
+            }
+        } catch(err) {
+            console.log(err)
+            this.displayServiceError()
+        }
+
+        try {
+            for (let user of users){
+                content += `<tr><td>${user.displayname}</td>
+                      <td><a class="btn-floating btn-small waves-effect waves-light green" ><i class="material-icons center" onclick="indexController.AddPartage(${liste_id}, '${user.displayname}')">add</i></a></td></tr>`
+            }
+            $("#ListUser").innerHTML = content
+
+        } catch(err) {
+            console.log(err)
+            this.displayServiceError()
+        }
+        this.getModal('#modalShareList').open()
+    }
+
+    async getByDisplayUser(liste_id){
+        let content = ''
+        const displayUser = $('#nameUser').value
+        const users = await this.modeluseraccount.getUser(displayUser)
+        try {
+                content += `<tr><td>${users.displayname}</td>
+                      <td><a class="btn-floating btn-small waves-effect waves-light green" ><i class="material-icons center" onclick="indexController.AddPartage(${liste_id}, '${users.displayname}')">add</i></a></td></tr>`
+
+            $("#ListUser").innerHTML = content
+
+        } catch(err) {
+            console.log(err)
+            this.displayServiceError()
+        }
+       // this.getModal('#modalShareList').open()
+
+    }
+
+
+    async AddPartage(liste_id, loguser) {
+        const partage = await this.modelpartage.getAllPartage()
+        partage.modifier = $("#archimodifier").checked
+        let partages = new Partage("", loguser, partage.modifier, liste_id)
+        await this.modelpartage.insert(partages)
+        this.toast("l'utilisateur a bien été ajouté")
+        this.displayAllPartage()
+    }
+
     async displayAllListsArchived(){
         this.ListEncour.style.display = "block";
         this.newlist.style.display = "none";
         this.historique.style.display = "none";
-     //   this.listdeleted.style.display = "block";
+        this.listPart.style.display = "block"
+
+        //   this.listdeleted.style.display = "block";
         window.displayArchived = true
         let content = ''
         const listes = await this.model.getAllListes()
@@ -232,12 +373,13 @@ class IndexController extends BaseController {
                 }
                 const date = list.date.toLocaleDateString()
                 if (list.archived && !list.deleted) {
-                    content += `<tr><td onclick="indexController.displayList(${list.id})">${list.namelistes}</td>
+                    content += `<tr><td onclick="indexController.displayList(${list.id}, true)">${list.namelistes}</td>
                     <td>${date}</td>
-                    <td>${check}</td>
+                    <td onclick="indexController.displaychangeCheck(${list.id})">${check}</td>
 
                       <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.displayConfirmDelete(${list.id})">delete_forever</i></a></td>
-                    <td><a class="btn-floating btn-small waves-effect waves-light red" ><i class="material-icons center" onclick="indexController.displayEditList(${list.id})">edit</i></a></td>
+                     <!-- <td><a class="btn-floating btn-small waves-effect waves-light blue" ><i class="material-icons center" onclick="indexController.displayShare(${list.id})">share</i></a></td>-->
+                      <!--<td><a class="btn-floating btn-small waves-effect waves-light green" ><i class="material-icons center" onclick="indexController.displayEditList(${list.id})">edit</i></a></td>-->
 
                     </tr>`
                 }

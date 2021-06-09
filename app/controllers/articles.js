@@ -1,7 +1,11 @@
 class IndexController extends BaseController {
+    newarticle = document.getElementById("btnadd");
+
     constructor() {
         super()
         this.list_id = indexController.SelectedList_id
+        this.modif = indexController.SelectedModif
+
         indexController.SelectedList_id = null
 
         this.displayTitle()
@@ -124,6 +128,13 @@ class IndexController extends BaseController {
 
 
     async displayAllFromList(){
+
+        if (this.modif === false){
+            this.newarticle.style.display = "none";
+        }else{
+            this.newarticle.style.display = "block";
+        }
+
         try {
             let content = ''
             const articles = await this.modelarticle.getAllFromList(this.list_id)
@@ -135,18 +146,39 @@ class IndexController extends BaseController {
                 else {
                     check = `<input type="checkbox" class="filled-in" background="red"/><span>Non Acheté</span>`
                 }
+                if (this.modif === true){
                 content += `<tr><td >${article.articles}</td>
                     <td>${article.quantite}</td>
-                    <td>${check}</td>
+                    <td onclick="indexController.displaychangeCheck(${article.id})">${check}</td>
                     <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.displayConfirmDeleteArticle(${article.id})">delete_forever</i></a></td>
                     <td><a class="btn-floating btn-small waves-effect waves-light red" ><i class="material-icons center" onclick="indexController.displayEditArticle(${article.id})" >edit</i></a></td>
                     </tr>`
+            }else{
+                    content += `<tr><td >${article.articles}</td>
+                    <td>${article.quantite}</td>
+                    <td onclick="indexController.displaychangeCheck(${article.id})">${check}</td>
+                     <td><a class="btn-floating btn-small waves-effect waves-light red" ><i class="material-icons center" onclick="indexController.displayEditArticle(${article.id})" >edit</i></a></td>
+                    </tr>`
+                }
             }
             $("#ArticleTable").innerHTML = content
         } catch (err) {
             console.log(err)
             this.displayServiceError()
         }
+    }
+
+    async displaychangeCheck(article_id){
+        const article = await this.modelarticle.getArticle(article_id)
+        if(article.checked === true){
+            article.checked = false
+            await this.modelarticle.update(article)
+        }
+        else {
+            article.checked = true
+            await this.modelarticle.update(article)
+        }
+        this.displayAllFromList()
     }
 
 }

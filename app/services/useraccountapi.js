@@ -1,3 +1,5 @@
+serviceBaseUrlUserAccount = "http://localhost:3333/useraccount"
+
 class UserAccountAPI extends BaseAPIService {
     constructor() {
         super("useraccount")
@@ -15,5 +17,21 @@ class UserAccountAPI extends BaseAPIService {
                 reject(res.status)
             }
         }).catch(err => reject(err)))
+    }
+
+    getAllUser1() {
+        return fetchJSON(serviceBaseUrlUserAccount, this.token)
+    }
+
+    getByLogin(login){
+        return fetchJSON(`${serviceBaseUrlUserAccount}/login/${login}`)
+    }
+
+    getUser1(displayUser) {
+        return fetchJSON(`${serviceBaseUrlUserAccount}/${displayUser}` )
+    }
+
+    getNotpartage(list_id) {
+        return fetchJSON(`${serviceBaseUrlUserAccount}/notPartage/${list_id}`, this.token)
     }
 }

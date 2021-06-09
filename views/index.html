@@ -1,11 +1,13 @@
  <nav>
-            <div class="nav-wrapper">
+            <div class="nav-wrapper black">
                 <a href="#" id="title" class="brand-logo">Listes de courses</a>
                 <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a  id="btnadd" onclick="indexController.displayAddList()">Nouvelle Liste</a></li>
-                    <li><a  id="historique" onclick="indexController.displayAllListsArchived()">historique</a></li>
+                    <li><a  id="btnadd" onclick="indexController.displayAddList()">Nouvelle liste</a></li>
+                    <li><a  id="historique" onclick="indexController.displayAllListsArchived()">Historique</a></li>
                     <li><a  id="btncour" onclick="indexController.displayAllLists()">Listes en cour</a></li>
-                  <!--  <li><a  id="btndeleted" onclick="indexController.displayAllListsDeleted()">Listes suprimées</a></li> -->
+                    <li><a  id="btnlistpart" onclick="indexController.displayAllPartage()">Listes partagées</a></li>
+
+                    <!--  <li><a  id="btndeleted" onclick="indexController.displayAllListsDeleted()">Listes suprimées</a></li> -->
                 </ul>
             </div>
  </nav>
@@ -17,7 +19,7 @@
                 <tr>
                     <th>Listes</th>
                     <th>Date</th>
-                    <th>Archivée</th>
+                   <th>Etat</th>
                 </tr>
                 </thead>
                 <tbody id="ListTable">
@@ -48,6 +50,7 @@
             </div>
         </div>
     </div>
+
     <div id="modalEditList" class="modal">
         <div class="modal-content">
             <h4>Modifier la liste</h4>
@@ -81,3 +84,36 @@
         </div>
     </div>
 </div>
+
+ <div id="modalShareList" class="modal">
+     <div class="modal-content">
+         <h4>Partager une liste</h4>
+         <div class="row col s12">
+             <div class="input-field col s8">
+                 <input placeholder="chercher un nom d'utilisateur" id="nameUser" type="text" class="validate">
+             </div>
+             <div>
+                 <label>
+                     <input type="checkbox" id="archimodifier">
+                     <span>Modifier la Liste</span>
+                 </label>
+             </div>
+             <div class="input-field col s4" id="rechercheUser">
+             </div>
+            </div>
+         <table>
+             <h5  id="titleuserpartage" class="brand-logo center">Utilisateur en partage</h5>
+
+             <tbody id="ListUserpartage">
+
+             </tbody>
+         </table>
+         <table>
+             <h5 id="titleuser" class="brand-logo center">Ajouter un utilisateur en partage</h5>
+
+             <tbody id="ListUser">
+
+             </tbody>
+         </table>
+     </div>
+ </div>

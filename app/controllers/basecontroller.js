@@ -7,6 +7,8 @@ class BaseController {
       //  this.articles = new Articles()
         this.liste = new Liste()
         this.model = new Model()
+        this.modelpartage = new ModelPartage()
+        this.modeluseraccount = new ModelUserAccount()
     }
     checkAuthentication() {
         if (sessionStorage.getArticle("token") === null) {
