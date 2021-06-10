@@ -10,7 +10,7 @@ class IndexController extends BaseController {
     constructor() {
         super()
         this.ListEncour.style.display = "none";
-        this.listPart.style.display = "block"
+        this.listPart.style.display = "block";
         if (window.displayArchived){
                  this.displayAllListsArchived()
             }
@@ -240,7 +240,7 @@ class IndexController extends BaseController {
                         if (!liste.deleted && partage.modifier === false) {
                             content += `<tr><td onclick="indexController.displayList(${liste.id}, ${partage.modifier})">${liste.namelistes}</td>
                          <td>${date}</td>
-                         <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="modelpartage.delete(${partage.id})">delete_forever</i></a></td>
+                         <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.delete(${partage.id})">delete_forever</i></a></td>
                          </tr>`
                         }
                         else if(!liste.deleted && partage.modifier === true) {
@@ -251,6 +251,7 @@ class IndexController extends BaseController {
                          </tr>`
                         }
                         }
+                    this.displayAllPartage()
                     }
 
             $("#ListTable").innerHTML = content
@@ -291,6 +292,7 @@ class IndexController extends BaseController {
         let content2 = ''
         const users = await this.modeluseraccount.getNotpartage(liste_id)
         const partages = await this.modelpartage.getBylistid(liste_id)
+        const myName = await this.modeluseraccount.getByLogin(sessionStorage.getItem("displayname"))
         try {
                 content1 += `<button class="waves-effect waves-light purple btn" id="btnRechercheUser" onclick="indexController.getByDisplayUser(${liste_id})">Rechercher</button>`
             $("#rechercheUser").innerHTML = content1
@@ -300,21 +302,28 @@ class IndexController extends BaseController {
             this.displayServiceError()
         }
         try {
+            $("#ListUserpartage").innerHTML = ""
+            $("#notuser").innerHTML = ""
             for (let partage of partages){
                 content2 += `<tr><td>${partage.loguser}</td>
-                 <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="modelpartage.delete(${partage.id})">delete_forever</i></a></td>`
+                <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.displaydelete(${partage.id}, ${partage.liste_id})">delete_forever</i></a></td>`
+            }
+            if(content2.toString() !== "") {
                 $("#ListUserpartage").innerHTML = content2
+            }else{
+                content2 += `<tr><td>La liste n'est pas partagée</td>`
+                $("#notuser").innerHTML = content2
             }
         } catch(err) {
             console.log(err)
             this.displayServiceError()
         }
-
         try {
             for (let user of users){
+                if(user.displayname !== myName.displayname ){
                 content += `<tr><td>${user.displayname}</td>
                       <td><a class="btn-floating btn-small waves-effect waves-light green" ><i class="material-icons center" onclick="indexController.AddPartage(${liste_id}, '${user.displayname}')">add</i></a></td></tr>`
-            }
+            }}
             $("#ListUser").innerHTML = content
 
         } catch(err) {
@@ -322,6 +331,12 @@ class IndexController extends BaseController {
             this.displayServiceError()
         }
         this.getModal('#modalShareList').open()
+    }
+
+    async displaydelete(partage_id, liste_id){
+        this.modelpartage.delete(partage_id)
+        this.displayShare(liste_id)
+
     }
 
     async getByDisplayUser(liste_id){
@@ -349,7 +364,8 @@ class IndexController extends BaseController {
         let partages = new Partage("", loguser, partage.modifier, liste_id)
         await this.modelpartage.insert(partages)
         this.toast("l'utilisateur a bien été ajouté")
-        this.displayAllPartage()
+        this.displayShare(liste_id)
+       // this.displayAllPartage()
     }
 
     async displayAllListsArchived(){

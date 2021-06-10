@@ -45,8 +45,8 @@ class ModelUserAccount {
         return this.api.delete(id).then(res => res.status)
     }
 
-    insert(liste) {
-        return this.api.insert(liste).then(res => res.status)
+    insert(newuser) {
+        return this.api.insert(newuser).then(res => res.status)
     }
 
     update(liste) {

@@ -13,12 +13,13 @@
     <div class="nav-wrapper black">
         <a href="#" id="title" class="brand-logo">Listes de courses</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a  id="btnback" onclick="navigate('newaccount')">S'eregistrer</a></li>
+            <li><a  id="senregistrer" onclick="loginController.displayRegister()">S'enregistrer</a></li>
         </ul>
     </div>
 </nav>
 <body>
-<div class="container">
+
+<div class="container" id="connex">
     <h3>Connexion</h3>
     <div>
         <div class="row">
@@ -37,6 +38,25 @@
         </div>
         <div class="row">
             <button class="waves-effect waves-light btn" onclick="loginController.authenticate()"><i class="material-icons right">check</i>Se connecter</button>
+        </div>
+    </div>
+</div>
+
+<div class="container" id="register" style="display:none;">
+    <div>
+        <h4>S'enregistrer</h4>
+        <div class="row col s12">
+            <div class="input-field col s8">
+                <input placeholder="Vôtre pseudo" id="pseudo" type="text" class="validate">
+            </div>
+            <div class="input-field col s8">
+                <input placeholder="Vôtre adresse e-mail" id="email" type="text" class="validate">
+            </div>
+            <div class="input-field col s8">
+                <input placeholder="Mot de passe" id="challenge" type="password" class="validate">
+            </div>
+            <div class="input-field col s4" id="btnregister1">
+            </div>
         </div>
     </div>
 </div>

@@ -21,8 +21,8 @@ class PartageAPI extends BaseAPIService{
     getPartage(partage_id) {
         return fetchJSON(`${serviceBaseUrl4}/${partage_id}`, this.token)
     }
-    delete(list_id) {
-        return fetch(`${serviceBaseUrl4}/${list_id}`,  { method: 'DELETE' })
+    delete(partage_id) {
+        return fetch(`${serviceBaseUrl4}/${partage_id}`,  { method: 'DELETE' })
     }
 
     insert(partage) {
