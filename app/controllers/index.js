@@ -251,7 +251,6 @@ class IndexController extends BaseController {
                          </tr>`
                         }
                         }
-                    this.displayAllPartage()
                     }
 
             $("#ListTable").innerHTML = content
