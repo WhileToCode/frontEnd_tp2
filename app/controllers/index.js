@@ -240,13 +240,13 @@ class IndexController extends BaseController {
                         if (!liste.deleted && partage.modifier === false) {
                             content += `<tr><td onclick="indexController.displayList(${liste.id}, ${partage.modifier})">${liste.namelistes}</td>
                          <td>${date}</td>
-                         <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.delete(${partage.id})">delete_forever</i></a></td>
+                         <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.displaydelete(${partage.id}, ${partage.liste_id})">delete_forever</i></a></td>
                          </tr>`
                         }
                         else if(!liste.deleted && partage.modifier === true) {
                             content += `<tr><td onclick="indexController.displayList(${liste.id})">${liste.namelistes}</td>
                          <td>${date}</td>
-                         <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="modelpartage.delete(${partage.id})">delete_forever</i></a></td>
+                         <td><a class="btn-floating btn-small waves-effect waves-light red " ><i class="material-icons center" onclick="indexController.displaydelete(${partage.id}, ${partage.liste_id})">delete_forever</i></a></td>
                          <td><a class="btn-floating btn-small waves-effect waves-light green" ><i class="material-icons center" onclick="indexController.displayEditList(${liste.id})">edit</i></a></td>
                          </tr>`
                         }
@@ -334,8 +334,7 @@ class IndexController extends BaseController {
 
     async displaydelete(partage_id, liste_id){
         this.modelpartage.delete(partage_id)
-        this.displayShare(liste_id)
-
+        this.displayAllPartage()
     }
 
     async getByDisplayUser(liste_id){
